@@ -1,11 +1,13 @@
 <template>
   <teleport to="body">
-    <div class="modal" v-if="isOpen">
-      <div class="modal__content">
-        <slot></slot>
-        <div class="modal__close" @click="$emit('close-modal')"></div>
+    <transition name="fade">
+      <div class="modal" v-if="isOpen">
+        <div class="modal__content">
+          <slot></slot>
+          <div class="modal__close" @click="$emit('close-modal')"></div>
+        </div>
       </div>
-    </div>
+    </transition>
   </teleport>
 </template>
 
@@ -38,7 +40,7 @@ export default {
 
     &__content {
       position: relative;
-      padding: 40px;
+      padding: 50px;
       background-color: #fff;
       border-radius: 20px;
     }

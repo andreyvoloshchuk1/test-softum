@@ -1,8 +1,10 @@
 <template>
-  <vue-datepicker
-      v-model="selectedDate"
-  />
-  <div v-if="isError">Неверная дата</div>
+  <div class="datepicker">
+    <vue-datepicker
+        v-model="selectedDate"
+    />
+    <div v-if="isError" class="error">Неверная дата</div>
+  </div>
 </template>
 
 <script>
@@ -40,7 +42,7 @@ export default {
     watch(selectedDate, (value) => {
       emit('change', {
         value,
-        isError: isError.value
+        error: isError.value
       })
     })
 
@@ -54,6 +56,27 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.datepicker {
+  position: relative;
+  margin-bottom: 30px;
+}
 
+:deep(.v3dp__input_wrapper) {
+  input {
+    padding: 10px 20px;
+    text-align: center;
+    border: 1px solid $base-color;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+}
+
+.error {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 6px);
+  text-align: center;
+  color: $error-color;
+}
 </style>

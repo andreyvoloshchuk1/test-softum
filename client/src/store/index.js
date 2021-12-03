@@ -1,29 +1,44 @@
 import { createStore as _createStore } from 'vuex'
-import axios from '../utils/axios'
+import { axios } from '../utils/axios'
 
 const store = {
     state () {
         return {
-            exchangeList: []
+            isLoading: false,
+            exchange: '',
+            exchangeList: {}
         }
     },
     mutations: {
+        SET_EXCHANGE (state, payload) {
+            state.exchange = payload
+        },
         SET_EXCHANGE_LIST (state, payload) {
             state.exchangeList = payload
+        },
+        SET_EXCHANGE_TO_DEFAULT (state) {
+            state.exchange = ''
+            state.exchangeList = {}
+        },
+        SET_LOADING (state, payload) {
+            state.isLoading = payload
         }
     },
 
     actions: {
         async fetchExchangeList ({ commit }, payload) {
-            const data1 = await axios('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5')
-            console.log(data1)
-            const data = await axios('https://api.privatbank.ua/p24api/exchange_rates?json&date=01.12.2014')
-            console.log(data)
-            // commit('SET_EXCHANGE_LIST', payload)
+            try {
+                const { data } = await axios(`/api/p24api/exchange_rates?json&date=${payload.date}`)
+                commit('SET_EXCHANGE', payload.exchange)
+                commit('SET_EXCHANGE_LIST', data)
+            } catch (e) {
+                console.log(e)
+                commit('SET_EXCHANGE_TO_DEFAULT')
+            }
         }
     }
 }
 
-export function createStore() {
-    return _createStore(store)
+export function createStore(plugins) {
+    return _createStore({ ...store, ...plugins })
 }

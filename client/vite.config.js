@@ -7,5 +7,14 @@ export default defineConfig({
     preprocessorOptions: {
       scss: { additionalData: `@import "src/assets/scss/_variables";` },
     },
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://api.privatbank.ua',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      },
+    }
   }
 })
